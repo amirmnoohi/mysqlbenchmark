@@ -1,5 +1,7 @@
 #!/bin/sh
 
+version='0.37.50.15'
+
 
 mysql_path=$(which mysql)
 mysql_dir_path=$(dirname $mysql_path)
@@ -19,15 +21,16 @@ rm -rf /tmp/dbt2
 mkdir -p /tmp/dbt2/data
 
 log 'Downloading...'
-wget -q -O - http://downloads.mysql.com/source/dbt2-0.37.50.15.tar.gz | tar xvz -C /tmp/dbt2
+wget -q -O - https://downloads.mysql.com/source/dbt2-$version.tar.gz | tar xvz -C /tmp
 
 # Go to the directory extracted
-cd /tmp/dbt2/dbt2-0.37.50.15
+cd /tmp/dbt2-$version
 
 # Fix a non-nullable parameter
 search='ol_delivery_d timestamp NOT NULL'
 replace='ol_delivery_d timestamp NULL'
 sed -i "s/$search/$replace/g" scripts/mysql/mysql_load_db.sh
+sed -i 's/"-p $DB_PASSWORD"/"-p$DB_PASSWORD"/g' scripts/mysql/mysql_load_db.sh scripts/mysql/mysql_load_sp.sh
 
 log 'Configuring...'
 ./configure --with-mysql
