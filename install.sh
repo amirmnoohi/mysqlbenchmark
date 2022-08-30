@@ -1,5 +1,6 @@
 #!/bin/sh
 
+
 mysql_path=$(which mysql)
 mysql_dir_path=$(dirname $mysql_path)
 
@@ -7,6 +8,9 @@ log() {
   echo
   echo -e "\e[37;42m$1\e[0m"
 }
+
+log 'Installing required packages...'
+sudo apt-get install automake autoconf libmysqlclient-dev -y
 
 # Clean up previous builds
 rm -rf /tmp/dbt2
